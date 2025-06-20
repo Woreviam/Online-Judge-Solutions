@@ -32,17 +32,7 @@ typedef pair<int, int> par;
 par P[MAXN];
 int n;
 
-int memo[MAXN], next[MAXN];
-
-int lower_Bound(int lo, int hi, int val){
-	while(lo < hi){
-		int me = lo + (hi - lo)/2;
-		if(P[me].first < val)lo = me + 1;
-		else hi = me;
-	}
-	return lo;
-}
-
+int memo[MAXN];
 string trans(int num){
 
 	if(num == 0)return "00000000";
@@ -57,26 +47,25 @@ string trans(int num){
 
 int main(){
 
-	while(cin>>n){
+	while(scanf("%d", &n) == 1){
 		
 		if(n <= 0)break;
 		
 		for(int i = 0; i < n; i++){
 			scanf("%d%d", &P[i].first, &P[i].second);
 		}
-		P[n] = make_pair(INF, INF);
 		
 		sort(P, P + n);
-		for(int i = 0; i < n; i++)next[i] = lower_Bound(i + 1, n, P[i].second), memo[i] = 0;
 		
 		memo[n] = 1;
-		for(int i = n - 1; i >= 0; i--)memo[i] = ( memo[i + 1] + memo[next[i]] )%MOD;
+		for(int i = n - 1; i >= 0; i--)memo[i] = ( memo[i + 1] + memo[lower_bound(P + i + 1, P + n, make_pair(P[i].second, 0)) - P] )%MOD;
 		
 		string ans = trans((memo[0] - 1 + MOD) %MOD);
-		cout1(ans);
+		printf("%s\n", ans.c_str());
 	
 	}
 }
+
 
 
 
